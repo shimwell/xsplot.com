@@ -3,58 +3,29 @@
 * Copyright 2013-2021 Start Bootstrap
 * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-stylish-portfolio/blob/master/LICENSE)
 */
-window.addEventListener('DOMContentLoaded', event => {
 
-    const sidebarWrapper = document.getElementById('sidebar-wrapper');
-    let scrollToTopVisible = false;
-    // Closes the sidebar menu
-    const menuToggle = document.body.querySelector('.menu-toggle');
-    menuToggle.addEventListener('click', event => {
-        event.preventDefault();
-        sidebarWrapper.classList.toggle('active');
-        _toggleMenuIcon();
-        menuToggle.classList.toggle('active');
-    })
+// Fades the scroll-to-top button in once the page has been scrolled a little.
+//
+// The theme this came from also wired up a sidebar menu. This page has never
+// had one, so querying for it returned null and the listener below was never
+// reached, which is why the button stayed hidden however far you scrolled.
+window.addEventListener('DOMContentLoaded', () => {
+    const scrollToTop = document.body.querySelector('.scroll-to-top');
+    if (!scrollToTop) return;
 
-    // Closes responsive menu when a scroll trigger link is clicked
-    var scrollTriggerList = [].slice.call(document.querySelectorAll('#sidebar-wrapper .js-scroll-trigger'));
-    scrollTriggerList.map(scrollTrigger => {
-        scrollTrigger.addEventListener('click', () => {
-            sidebarWrapper.classList.remove('active');
-            menuToggle.classList.remove('active');
-            _toggleMenuIcon();
-        })
-    });
-
-    function _toggleMenuIcon() {
-        const menuToggleBars = document.body.querySelector('.menu-toggle > .fa-bars');
-        const menuToggleTimes = document.body.querySelector('.menu-toggle > .fa-times');
-        if (menuToggleBars) {
-            menuToggleBars.classList.remove('fa-bars');
-            menuToggleBars.classList.add('fa-times');
-        }
-        if (menuToggleTimes) {
-            menuToggleTimes.classList.remove('fa-times');
-            menuToggleTimes.classList.add('fa-bars');
-        }
-    }
-
-    // Scroll to top button appear
+    let visible = false;
     document.addEventListener('scroll', () => {
-        const scrollToTop = document.body.querySelector('.scroll-to-top');
         if (document.documentElement.scrollTop > 100) {
-            if (!scrollToTopVisible) {
+            if (!visible) {
                 fadeIn(scrollToTop);
-                scrollToTopVisible = true;
+                visible = true;
             }
-        } else {
-            if (scrollToTopVisible) {
-                fadeOut(scrollToTop);
-                scrollToTopVisible = false;
-            }
+        } else if (visible) {
+            fadeOut(scrollToTop);
+            visible = false;
         }
-    })
-})
+    });
+});
 
 function fadeOut(el) {
     el.style.opacity = 1;
